@@ -1,0 +1,69 @@
+# ============================================================================
+# .gitignore for Heart Failure Admissions Report
+# ============================================================================
+
+# R-specific files
+.Rproj.user/
+.Rhistory
+.RData
+.Rds
+*.Rds
+.Ruserdata
+
+# RStudio
+.Rproject
+
+# Quarto/LaTeX output
+_quarto/
+_freeze/
+*.pdf
+*.log
+*.aux
+*.tex
+*.synctex.gz
+*.out
+*.blg
+*.bbl
+*.fls
+*.fdb_latexmk
+
+# Operating system files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment and credentials
+.env
+.env.local
+credentials.txt
+secrets/
+*.pem
+*.key
+
+# Data files (analysis outputs should be version controlled, but large data extracts should not)
+data/*.csv
+data/*.txt
+reports/outputs/*.pdf
+reports/outputs/*.png
+reports/outputs/*.jpg
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Python (if used)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+venv/
+env/
+
+# Miscellaneous
+*.tmp
+.cache/
+node_modules/
