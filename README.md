@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # Heart Failure Admissions Report
 
 A reproducible, auditable pipeline for generating executive summaries of
