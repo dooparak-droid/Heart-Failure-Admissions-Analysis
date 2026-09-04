@@ -32,31 +32,29 @@ The report generates a 3-page executive summary with:
 ## Project Structure
 
 ```         
-heart-failure-admissions-report/
-├── README.md                          # This file
-├── LICENSE                            # MIT License
-├── .gitignore                         # Version control exclusions
-├── STRUCTURE.md                       # Technical architecture & decisions
+Heart-Failure-Admissions-Analysis/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── STRUCTURE.md                       # Technical architecture and decisions
 │
-├── sql/
-│   └── 01_build_cohort.sql           # SQL views: hf_cohort, hf_drug_summary_view
-│
-├── r/
-│   ├── 00_load_and_configure.R       # Database connection & setup (RUN FIRST)
+├── scripts/
+│   ├── 00_load_and_configure.R       # Database connection and setup (run first)
+│   ├── 01_build_cohort.sql           # SQL views: hf_cohort, hf_drug_summary_view
 │   ├── 01_heart_failure_eda.R        # Exploratory data analysis: HF cohort
 │   ├── 02_prescription_eda.R         # Exploratory data analysis: prescriptions
-│   └── 03_prepare_tables.R           # Generate .rds objects for report
+│   └── 03_prepare_tables.R           # Generates .rds objects for the report
 │
 ├── reports/
-│   ├── heart_failure_report.qmd      # Quarto template (renders .pdf)
-│   └── outputs/                       # (generated locally; not in repo)
+│   ├── Heart-Failure-Report.pdf       # The rendered report
+│   └── heart_failure_report.qmd       # Quarto source (renders to the PDF above)
 │
-├── docs/
-│   └── handover_notes.md              # Technical handover documentation
-│
-└── data/
-    └── .gitkeep                       # Placeholder; data lives in MIMIC only
+└── docs/
+    └── handover_notes.pdf             # Setup and regeneration instructions
 ```
+
+The pipeline reads from MIMIC-III directly and writes intermediate `.rds`
+files and the rendered report locally; neither is committed to the repo.
 
 ## Quick Start
 
@@ -90,8 +88,8 @@ heart-failure-admissions-report/
 1.  **Clone this repository**
 
     ``` bash
-    git clone https://github.com/yourusername/heart-failure-admissions-report.git
-    cd heart-failure-admissions-report
+    git clone https://github.com/dooparak-droid/Heart-Failure-Admissions-Analysis.git
+    cd Heart-Failure-Admissions-Analysis
     ```
 
 2.  **Install Quarto and TinyTeX** (if needed)
@@ -106,15 +104,15 @@ heart-failure-admissions-report/
 Run scripts **in order**:
 
 ``` bash
-# Step 1: Establish DB connection & load data
-Rscript r/00_load_and_configure.R
+# Step 1: Establish DB connection and load data
+Rscript scripts/00_load_and_configure.R
 
 # Step 2 & 3: Exploratory checks (optional, but recommended)
-Rscript r/01_heart_failure_eda.R
-Rscript r/02_prescription_eda.R
+Rscript scripts/01_heart_failure_eda.R
+Rscript scripts/02_prescription_eda.R
 
 # Step 4: Prepare summary tables (generates .rds objects)
-Rscript r/03_prepare_tables.R
+Rscript scripts/03_prepare_tables.R
 
 # Step 5: Render PDF report
 cd reports
@@ -123,11 +121,15 @@ quarto render heart_failure_report.qmd --to pdf
 
 **Or in RStudio:**
 
-1.  Open `r/00_load_and_configure.R`, run the script
-2.  Open `r/03_prepare_tables.R`, run the script
+1.  Open `scripts/00_load_and_configure.R`, run the script
+2.  Open `scripts/03_prepare_tables.R`, run the script
 3.  Open `reports/heart_failure_report.qmd`, click **Render**
 
-The PDF will be saved as `reports/heart_failure_report.pdf`.
+The PDF is saved as `reports/heart_failure_report.pdf`.
+
+The four `.rds` files step 4 generates need to sit in the same folder as
+`heart_failure_report.qmd` for step 5 to find them, so run step 4 from
+`reports/` as well.
 
 ## Cohort Definition
 
@@ -196,7 +198,7 @@ The PDF will be saved as `reports/heart_failure_report.pdf`.
 ### "Cannot coerce class 'function' to a data.frame"
 
 -   **Cause:** Missing RDS file in `reports/` directory
--   **Fix:** Run `r/03_prepare_tables.R` first to generate `.rds` files
+-   **Fix:** Run `scripts/03_prepare_tables.R` first to generate `.rds` files
 
 ### Quarto PDF won't render
 
@@ -240,7 +242,7 @@ Potential extensions discussed in handover notes:
 3.  **Social determinants** — Housing stability, employment status
 4.  **Temporal analysis** — Trends across admission types and seasons
 
-See `docs/handover_notes.md` for detailed discussion.
+See `docs/handover_notes.pdf` for detailed discussion.
 
 ## Licensing
 
@@ -270,7 +272,7 @@ https://github.com/dooparak-droid/Heart-Failure-Admissions-Analysis
 
 ## Contact & Support
 
-For questions or issues: - Check `docs/STRUCTURE.md` for technical
+For questions or issues: - Check `STRUCTURE.md` for technical
 details - Review inline code comments - Submit issues or pull requests
 on GitHub
 

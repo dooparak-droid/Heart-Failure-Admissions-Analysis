@@ -13,10 +13,10 @@
 # RStudio
 .Rproject
 
-# Quarto/LaTeX output
+# Quarto/LaTeX build intermediates (final PDFs, e.g. in reports/ and docs/,
+# are committed deliberately and should not be excluded here)
 _quarto/
 _freeze/
-*.pdf
 *.log
 *.aux
 *.tex

@@ -1,0 +1,91 @@
+---
+title: "Heart Failure Admissions Report"
+format:
+  pdf:
+    geometry:
+      - top=15mm
+      - left=15mm
+      - right=15mm
+      - bottom=15mm
+    fontsize: 10pt
+    include-in-header:
+      text: |
+        \setlength{\textfloatsep}{8pt}
+        \setlength{\floatsep}{6pt}
+        \setlength{\intextsep}{6pt}
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+
+## 1. Background and Objectives
+
+Heart failure accounts for a substantial proportion of hospital admissions and is associated with high morbidity, mortality, and healthcare utilisation. Hospital management requested a recurring executive summary to describe the demographic characteristics, clinical course, and treatment patterns of patients admitted with heart failure, compared with other hospital admissions.
+
+This report summarises heart failure admissions using routinely collected electronic health record data from the MIMIC-III database. In addition to descriptive statistics, the report is designed to be reproducible and auditable, supporting routine re-generation in future reporting cycles.
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(gt)
+library(gtsummary)
+
+# Load frozen analysis datasets
+hf_cohort            <- readRDS("q1_hf_outcomes_summary.rds")
+non_hf_cohort        <- readRDS("q1_non_hf_outcomes_summary.rds")
+admissions_summary   <- readRDS("q2_outcomes_summary.rds")
+prescriptions_summary <- readRDS("q3_prescriptions_summary.rds")
+```
+
+## 2. Cohort Definition
+
+Heart failure admissions were identified using ICD-9 diagnosis codes corresponding to heart failure (428.x). Patients were classified as heart failure cases if any diagnosis associated with their admission matched these codes.
+
+All remaining admissions during the study period were classified as non-heart failure admissions and used as a comparator group. Only variables required to address the report objectives were extracted to minimise unnecessary data handling.
+
+## 3. Demographic Characteristics
+
+```{r}
+#| label: tbl-hf-cohort
+hf_cohort
+```
+
+Among heart failure admissions (N=13,608), the majority were aged 60 years and above (82% without diabetes, 81% with diabetes). Secondary diabetes was present in 39% of heart failure admissions. The cohort was predominantly White (76% without diabetes, 68% with diabetes), with a higher proportion of Black patients among those with diabetes (15% vs 8.2%). Most admissions were emergencies (86-88%), and gender distribution was relatively balanced with a slight male predominance (52-55%).
+
+```{r}
+#| label: tbl-non-hf-cohort
+non_hf_cohort
+```
+
+Non-heart failure admissions (N=45,368) showed a more diverse age distribution, with 22% aged 0-17 years among those without diabetes. Diabetes prevalence was lower (19%) compared to heart failure admissions. The proportion of emergency admissions was lower (63-81%) compared to heart failure patients, and 21% of non-diabetic admissions were newborns, reflecting the broader case mix.
+
+## 4. Clinical Outcomes
+
+```{r}
+#| label: tbl-outcomes
+admissions_summary
+```
+
+Hospital length of stay (LOS) for heart failure patients ranged from 7.6 to 9.1 days (median), with the youngest age group (0-17 years) showing substantially longer stays of 24.1 days. ICU LOS followed similar patterns, ranging from 2.5 to 3.7 days across most groups.
+
+In-hospital mortality was highest among patients aged 60+ (15.6%) and in the Other/Unknown ethnicity category (19.5%). Mortality was lower among patients with secondary diabetes (12.6%) compared to those without (15.7%). Black and Hispanic patients showed notably lower mortality rates (9.4% and 9.6% respectively) compared to White patients (14.6%).
+
+## 5. Medication Prescribing Patterns
+
+```{r}
+#| label: tbl-prescriptions
+prescriptions_summary
+```
+
+The five most commonly prescribed medications were diuretics and intravenous fluids, reflecting standard heart failure management. Furosemide was the most frequently prescribed medication (69,531 prescriptions), followed by potassium chloride (63,220 prescriptions) and D5W solution (57,005 prescriptions).
+
+More than half of all prescriptions for these medications were administered in the ICU (46-60%), indicating the severity of illness in this cohort. Patients received an average of 5.7 to 7.0 prescriptions per admission for each of these medications, suggesting frequent dose adjustments and ongoing clinical monitoring throughout the hospital stay.
+
+## 6. Limitations and Future Data Collection
+
+While MIMIC-III captures detailed clinical and administrative data, several relevant risk factors for heart failure outcomes are not routinely recorded. These include smoking history, medication adherence prior to admission, and key social determinants such as housing stability.
+
+To address these gaps, a short Open Data Kit (ODK) survey was designed to collect additional patient-reported variables at admission, including smoking history, alcohol use, and physical activity status. These data would support richer future analyses and more targeted service planning.
